@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "131442574963",
+    "project_id": "mizani-ajyal",
+    "storage_bucket": "mizani-ajyal.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131442574963:android:1f8a41cf24d4aa320c8c06",
+        "android_client_info": {
+          "package_name": "com.example.mizani_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8QPaE9JGNNcjGmY56GjtyIpq0BoMHcUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
