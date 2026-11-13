@@ -1,13 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'Services/notification_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
-import 'Screens/homescreen.dart';
-import 'Screens/loginscreen.dart';
-import 'Screens/onboardingscreen.dart';
-import 'Screens/register_screen.dart';
-import 'Screens/splash.dart';
+import 'app/core/bindings/initial_binding.dart';
+import 'app/core/theme/app_colors.dart';
+import 'app/core/theme/app_theme.dart';
+import 'app/data/services/notification_service.dart';
+import 'app/data/services/theme_service.dart';
+import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -23,120 +25,51 @@ Future<void> main() async {
 
   await NotificationService.instance.init();
 
-  runApp(
-    const MyApp(),
+  // اقرأ الوضع المحفوظ (فاتح / داكن / تلقائي) قبل أول شاشة
+  await Get.putAsync<ThemeService>(
+    () => ThemeService().init(),
+    permanent: true,
   );
+
+  runApp(const MizaniApp());
 }
 
-
-
-class MyApp extends StatelessWidget {
-
-  const MyApp({
-    super.key,
-  });
-
+class MizaniApp extends StatelessWidget {
+  const MizaniApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    return MaterialApp(
-
+    return GetMaterialApp(
+      title: "ميزاني",
       debugShowCheckedModeBanner: false,
 
-
-      // =========================
-      // منع تمدد الشاشة
-      // عند السحب لأعلى أو لأسفل
-      // =========================
-
-      scrollBehavior:
-      const MaterialScrollBehavior().copyWith(
+      // منع تمدد الشاشة عند السحب لأعلى أو لأسفل
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
         overscroll: false,
       ),
 
-
       locale: const Locale('ar'),
 
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeService.to.mode.value,
 
-      theme: ThemeData(
+      initialBinding: InitialBinding(),
+      initialRoute: AppPages.initial,
+      getPages: AppPages.pages,
 
-        fontFamily: "Cairo",
-
-        scaffoldBackgroundColor:
-        const Color(0xffF7F2FF),
-
-
-        textTheme: const TextTheme(
-
-          bodyLarge: TextStyle(
-            fontFamily: "Cairo",
-          ),
-
-          bodyMedium: TextStyle(
-            fontFamily: "Cairo",
-          ),
-
-        ),
-
-      ),
-
-
-
-      // =========================
-      // اتجاه التطبيق RTL
-      // =========================
-
+      // اتجاه التطبيق RTL + لون أيقونات شريط الحالة حسب الوضع
       builder: (context, child) {
-
-        return Directionality(
-
-          textDirection:
-          TextDirection.rtl,
-
-          child: child!,
-
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: AppColors.isDark
+              ? SystemUiOverlayStyle.light
+              : SystemUiOverlayStyle.dark,
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: child!,
+          ),
         );
-
       },
-
-
-      // =========================
-      // أول شاشة تفتح
-      // =========================
-
-      initialRoute: '/',
-
-
-      // =========================
-      // Routes
-      // =========================
-
-      routes: {
-
-        '/': (context) =>
-        const SplashScreen(),
-
-
-        '/onboarding': (context) =>
-        const OnboardingScreen(),
-
-
-        '/login': (context) =>
-        const LoginScreen(),
-
-
-        '/register': (context) =>
-        const RegisterScreen(),
-
-
-        '/home': (context) =>
-        const Homescreen(),
-
-      },
-
     );
-
   }
-
 }

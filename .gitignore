@@ -43,3 +43,8 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# نسخة احتياطية محلية قبل التحويل لـ GetX
+lib_backup_before_getx.zip
+
+/android/build/
